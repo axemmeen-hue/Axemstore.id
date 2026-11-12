@@ -97,6 +97,8 @@ section{padding:56px 16px}
 
 footer{background:var(--red-dd);color:#fff;text-align:center;padding:28px 16px;font-weight:700;font-size:14px}
 footer .studs{height:22px;margin:-28px -16px 20px;background-size:44px 44px}
+.paylogos{display:flex;gap:8px;justify-content:center;flex-wrap:wrap;margin:10px 0}
+.paylogos span{background:rgba(255,255,255,.12);border:2px solid rgba(255,255,255,.35);border-radius:6px;padding:4px 10px;font-size:13px;display:flex;gap:6px;align-items:center}
 
 /* ===== Modal ===== */
 .modal{position:fixed;inset:0;background:rgba(30,0,0,.7);display:none;align-items:center;justify-content:center;z-index:100;padding:16px}
@@ -112,9 +114,15 @@ footer .studs{height:22px;margin:-28px -16px 20px;background-size:44px 44px}
 .msg{font-size:13px;font-weight:800;text-align:center;margin-bottom:8px;min-height:16px;color:#b00}
 .sum{background:#fff0ee;border:3px dashed var(--red);border-radius:8px;padding:12px;margin-bottom:12px;font-weight:800;text-align:center}
 
-/* ===== Pembayaran & Pesanan Saya ===== */
-.qris{width:100%;max-width:240px;display:block;margin:0 auto 10px;border:3px solid var(--red-dd);border-radius:8px}
-.paybox{background:#fff0ee;border:3px dashed var(--red);border-radius:8px;padding:12px;margin-bottom:12px;font-weight:800;text-align:center;font-size:14px;line-height:1.5}
+/* ===== Metode pembayaran ===== */
+.mlab{font-size:13px;font-weight:800;margin-bottom:6px;text-align:center}
+.mths{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:12px}
+.box .mth{margin-bottom:0;font-size:14px;padding:8px;box-shadow:0 3px 0 var(--red-dd);background:#fff;color:var(--red-d);opacity:.7}
+.box .mth.on{background:var(--gold);opacity:1}
+.paybox{background:#fff0ee;border:3px dashed var(--red);border-radius:8px;padding:12px;margin-bottom:12px;font-weight:800;text-align:center;font-size:14px;line-height:1.6}
+.hint{font-size:12px;font-weight:700;opacity:.7;text-align:center;margin-bottom:10px}
+
+/* ===== Pesanan Saya ===== */
 .ord{border:3px solid var(--red-dd);border-radius:8px;padding:10px;margin-bottom:10px;font-weight:800;font-size:13px;line-height:1.6;word-break:break-word}
 .st{display:inline-block;padding:2px 8px;border-radius:5px;font-size:11px;border:2px solid var(--red-dd)}
 .st.pending{background:#ffe3a0}
@@ -183,8 +191,8 @@ footer .studs{height:22px;margin:-28px -16px 20px;background-size:44px 44px}
     <div class="title"><h2>Cara Order</h2></div>
     <div class="step-grid">
       <div class="step"><div class="n">1</div><i class="fa-solid fa-hand-pointer"></i><p>Pilih produk Robux atau Role Discord</p></div>
-      <div class="step"><div class="n">2</div><i class="fa-solid fa-user-lock"></i><p>Login dan isi username Roblox</p></div>
-      <div class="step"><div class="n">3</div><i class="fa-solid fa-money-bill-wave"></i><p>Bayar di halaman pembayaran, lalu klik Saya Sudah Bayar</p></div>
+      <div class="step"><div class="n">2</div><i class="fa-solid fa-user-lock"></i><p>Login, isi username Roblox, dan pilih metode bayar</p></div>
+      <div class="step"><div class="n">3</div><i class="fa-solid fa-money-bill-wave"></i><p>Bayar sesuai nominal, tulis ID pesanan di catatan, lalu klik Saya Sudah Bayar</p></div>
       <div class="step"><div class="n">4</div><i class="fa-solid fa-circle-check"></i><p>Pantau status di Pesanan Saya sampai selesai</p></div>
     </div>
   </div>
@@ -192,6 +200,13 @@ footer .studs{height:22px;margin:-28px -16px 20px;background-size:44px 44px}
 
 <footer id="kontak">
   <div class="studs"></div>
+  <p>Metode pembayaran</p>
+  <div class="paylogos">
+    <span><i class="fa-solid fa-wallet"></i> DANA</span>
+    <span><i class="fa-solid fa-mobile-screen-button"></i> GoPay</span>
+    <span><i class="fa-solid fa-money-bill-wave"></i> OVO</span>
+    <span><i class="fa-brands fa-paypal"></i> PayPal</span>
+  </div>
   <p><i class="fa-solid fa-headset"></i> Cek status pesananmu lewat menu Pesanan Saya</p>
   <p style="margin-top:6px;opacity:.7">&copy; 2026 AxemStore. Bukan afiliasi resmi Roblox Corporation.</p>
 </footer>
@@ -220,13 +235,17 @@ footer .studs{height:22px;margin:-28px -16px 20px;background-size:44px 44px}
 
     <div id="step1">
       <input id="rbxUser" placeholder="Username Roblox">
+      <div class="mlab">Metode pembayaran</div>
+      <div class="mths" id="mths"></div>
       <button class="btn gold" id="ordBtn"><i class="fa-solid fa-credit-card"></i> Lanjut Bayar</button>
     </div>
 
     <div id="step2" style="display:none">
-      <img id="qris" class="qris" alt="QRIS" style="display:none">
       <div class="paybox" id="payInfo"></div>
+      <div id="payActions"></div>
+      <div class="hint">Pesanan baru tercatat setelah kamu klik tombol di bawah, jadi klik setelah selesai membayar.</div>
       <button class="btn gold" id="paidBtn"><i class="fa-solid fa-circle-check"></i> Saya Sudah Bayar</button>
+      <div class="sw" id="backBtn">Ganti metode pembayaran</div>
     </div>
   </div>
 </div>
@@ -247,7 +266,6 @@ footer .studs{height:22px;margin:-28px -16px 20px;background-size:44px 44px}
     <h3><i class="fa-solid fa-user-shield"></i> Panel Admin</h3>
     <div class="ftabs" id="ftabs">
       <button class="btn on" data-f="waiting">Dicek</button>
-      <button class="btn" data-f="pending">Belum Bayar</button>
       <button class="btn" data-f="done">Selesai</button>
       <button class="btn" data-f="rejected">Ditolak</button>
       <button class="btn" data-f="all">Semua</button>
@@ -274,12 +292,20 @@ const firebaseConfig = {
 /* Email admin (huruf kecil semua). Login admin WAJIB pakai tombol Google. */
 const ADMIN_EMAIL = "axemmeen@gmail.com";
 
-/* Info pembayaran yang tampil ke pembeli (WAJIB diganti) */
+/* ====== METODE PEMBAYARAN ======
+   - number: nomor e-wallet (format lokal 08xx).
+   - name: nama akun e-wallet kamu (WAJIB diganti).
+   - app: alamat untuk mencoba membuka aplikasinya.
+   - link: (opsional) link pembayaran dari aplikasimu. Kalau diisi, tombolnya membuka link ini
+     dan bukan membuka aplikasi.
+   - PayPal: "user" = username PayPal.Me kamu, "rate" = kurs Rp per 1 USD,
+     "fee" = tambahan biaya PayPal untuk pembeli (0.06 = 6%, isi 0 kalau tidak mau). */
+const NOMOR = "08985044833";
 const PAY = {
-  qris: "",              // isi link gambar QRIS kamu (boleh dikosongkan)
-  method: "DANA",        // DANA / BCA / dll
-  number: "08xxxxxxxxxx",
-  name: "Nama Kamu"
+  dana:   {label:"DANA",   icon:"fa-solid fa-wallet",               number:NOMOR, name:"Nama Kamu", app:"dana://",  link:""},
+  gopay:  {label:"GoPay",  icon:"fa-solid fa-mobile-screen-button", number:NOMOR, name:"Nama Kamu", app:"gojek://", link:""},
+  ovo:    {label:"OVO",    icon:"fa-solid fa-money-bill-wave",      number:NOMOR, name:"Nama Kamu", app:"ovo://",   link:""},
+  paypal: {label:"PayPal", icon:"fa-brands fa-paypal",              user:"USERNAME_PAYPALME", rate:16000, fee:0.06}
 };
 
 firebase.initializeApp(firebaseConfig);
@@ -296,11 +322,17 @@ let products = [
   {id:"d1",type:"role",name:"Role Executor",price:13589,desc:"Role Executor di server Discord"},
   {id:"d2",type:"role",name:"Role Notification",price:7899,desc:"Role Notification di server Discord"}
 ];
-let tab = "robux", selected = null, authMode = "login";
+let tab = "robux", selected = null, authMode = "login", selMethod = "dana";
 const $ = id => document.getElementById(id);
 const rp = n => "Rp " + Number(n).toLocaleString("id-ID");
 const esc = s => String(s ?? "").replace(/[&<>"']/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
 const isAdminUser = u => !!u && (u.email || "").toLowerCase() === ADMIN_EMAIL && u.emailVerified;
+const usdOf = price => Math.ceil(price / PAY.paypal.rate * (1 + PAY.paypal.fee) * 100) / 100;
+const paypalLink = price => `https://www.paypal.me/${encodeURIComponent(PAY.paypal.user)}/${usdOf(price).toFixed(2)}USD`;
+const methodText = o => {
+  const m = PAY[o.payMethod];
+  return esc(m ? m.label : (o.payMethod || "-")) + (o.amountUsd ? " (USD " + Number(o.amountUsd).toFixed(2) + ")" : "");
+};
 
 /* ====== RENDER ====== */
 function render(){
@@ -378,6 +410,15 @@ const LABEL = {
 };
 let curOrder = null, unsub = null;
 
+function renderMethods(){
+  $("mths").innerHTML = Object.entries(PAY).map(([k,m]) =>
+    `<button type="button" class="btn mth ${k === selMethod ? "on" : ""}" data-m="${k}"><i class="${m.icon}"></i> ${m.label}</button>`
+  ).join("");
+  document.querySelectorAll("#mths .mth").forEach(b => b.onclick = () => {
+    selMethod = b.dataset.m; renderMethods();
+  });
+}
+
 function buy(id){
   selected = products.find(p => p.id === id);
   if(!auth.currentUser){ openM("authModal"); return; }
@@ -386,44 +427,94 @@ function buy(id){
   $("step1").style.display = "block";
   $("step2").style.display = "none";
   $("ordMsg").textContent = "";
+  curOrder = null;
+  renderMethods();
   openM("orderModal");
 }
 
-$("ordBtn").onclick = async () => {
+/* Salin teks ke clipboard (dengan cadangan untuk browser lama) */
+function copyText(t){
+  try{
+    if(navigator.clipboard && navigator.clipboard.writeText){ navigator.clipboard.writeText(t); return; }
+  }catch(e){}
+  const a = document.createElement("textarea");
+  a.value = t; document.body.appendChild(a); a.select();
+  try{ document.execCommand("copy"); }catch(e){}
+  document.body.removeChild(a);
+}
+
+/* Langsung arahkan ke pembayaran (dipanggil dari klik tombol) */
+function launchPay(){
+  const m = PAY[selMethod];
+  if(selMethod === "paypal"){
+    window.open(paypalLink(selected.price), "_blank", "noopener");
+    return;
+  }
+  copyText(m.number);
+  if(m.link){ window.open(m.link, "_blank", "noopener"); }
+  else if(m.app){ window.location.href = m.app; }
+}
+
+function showPay(orderId){
+  const m = PAY[selMethod], code = orderId.slice(0,8).toUpperCase();
+  if(selMethod === "paypal"){
+    const usd = usdOf(selected.price);
+    $("payInfo").innerHTML = `Bayar <b>USD ${usd.toFixed(2)}</b><br>
+      <small>(setara ${rp(selected.price)} + biaya PayPal)</small><br>
+      Tulis ID pesanan di catatan:<br><b>${code}</b>`;
+    $("payActions").innerHTML = `<button class="btn light" onclick="launchPay()"><i class="fa-brands fa-paypal"></i> Buka PayPal</button>`;
+  }else{
+    $("payInfo").innerHTML = `Transfer tepat <b>${rp(selected.price)}</b><br>
+      ${esc(m.label)}: <b>${esc(m.number)}</b><br>a.n. ${esc(m.name)}<br>
+      <small>Nomor sudah otomatis tersalin.</small><br>
+      Tulis ID pesanan di catatan:<br><b>${code}</b>`;
+    $("payActions").innerHTML = `<button class="btn light" onclick="launchPay()"><i class="${m.icon}"></i> Buka ${esc(m.label)} / Salin Nomor</button>`;
+  }
+}
+
+/* Lanjut Bayar: BELUM menyimpan pesanan, hanya menyiapkan data dan membuka pembayaran */
+$("ordBtn").onclick = () => {
   const rbx = $("rbxUser").value.trim();
   if(!rbx){ $("ordMsg").textContent = "Isi username Roblox dulu."; return; }
   const u = auth.currentUser;
-  $("ordBtn").disabled = true;
-  try{
-    const ref = await db.collection("orders").add({
-      uid: u.uid, email: u.email, roblox: rbx,
-      productId: selected.id, product: selected.name, price: selected.price,
-      status: "pending",
-      createdAt: firebase.firestore.FieldValue.serverTimestamp()
-    });
-    curOrder = ref.id;
-    $("ordTitle").textContent = "Pembayaran";
-    $("step1").style.display = "none";
-    $("step2").style.display = "block";
-    if(PAY.qris){ $("qris").src = PAY.qris; $("qris").style.display = "block"; }
-    $("payInfo").innerHTML =
-      `Bayar tepat <b>${rp(selected.price)}</b><br>${esc(PAY.method)}: ${esc(PAY.number)}<br>a.n. ${esc(PAY.name)}<br>
-       <small>ID Pesanan: ${ref.id.slice(0,8).toUpperCase()}</small>`;
-    $("ordMsg").textContent = "";
-  }catch(err){
-    $("ordMsg").textContent = "Gagal membuat pesanan. Coba lagi.";
-  }
-  $("ordBtn").disabled = false;
+  const ref = db.collection("orders").doc();   // hanya membuat ID, belum menulis ke database
+  const data = {
+    uid: u.uid, email: u.email, roblox: rbx,
+    productId: selected.id, product: selected.name, price: selected.price,
+    payMethod: selMethod,
+    status: "waiting"
+  };
+  if(selMethod === "paypal") data.amountUsd = usdOf(selected.price);
+  curOrder = {ref, data};
+
+  $("ordTitle").textContent = "Pembayaran";
+  $("step1").style.display = "none";
+  $("step2").style.display = "block";
+  $("ordMsg").textContent = "";
+  showPay(ref.id);
+  launchPay();
 };
 
+$("backBtn").onclick = () => {
+  curOrder = null;
+  $("ordTitle").textContent = "Konfirmasi Pesanan";
+  $("step1").style.display = "block";
+  $("step2").style.display = "none";
+};
+
+/* Saya Sudah Bayar: baru di sini pesanan disimpan */
 $("paidBtn").onclick = async () => {
+  if(!curOrder) return;
+  $("paidBtn").disabled = true;
   try{
-    await db.collection("orders").doc(curOrder).update({status:"waiting"});
+    await curOrder.ref.set({...curOrder.data, createdAt: firebase.firestore.FieldValue.serverTimestamp()});
+    curOrder = null;
     closeM("orderModal");
     openMy();
   }catch(err){
-    $("ordMsg").textContent = "Gagal, coba lagi.";
+    $("ordMsg").textContent = "Gagal menyimpan pesanan. Coba lagi.";
   }
+  $("paidBtn").disabled = false;
 };
 
 function openMy(){
@@ -434,6 +525,8 @@ function openMy(){
       .sort((a,b) => (b.createdAt?.seconds||0) - (a.createdAt?.seconds||0));
     $("myList").innerHTML = rows.map(o => `
       <div class="ord">${esc(o.product)}<br>${rp(o.price)} | ${esc(o.roblox)}<br>
+      Metode: ${methodText(o)}<br>
+      <small>ID ${o.id.slice(0,8).toUpperCase()}</small><br>
       <span class="st ${o.status}">${LABEL[o.status] || esc(o.status)}</span></div>`).join("")
       || "<p class='empty'>Belum ada pesanan.</p>";
   });
@@ -470,6 +563,7 @@ function renderAdmin(){
     return `
       <div class="ord">
         ${esc(o.product)} - ${rp(o.price)}<br>
+        Metode: ${methodText(o)}<br>
         Roblox: ${esc(o.roblox)}<br>
         ${esc(o.email)}<br>
         <small>ID ${o.id.slice(0,8).toUpperCase()} | ${t}</small><br>
